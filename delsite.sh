@@ -53,7 +53,7 @@ php -r "echo preg_replace( '/\n# BEGIN $site(\n.*)+# END $site/', '', file_get_c
 echo "=== Virtual host successfully removed"
 
 echo "=== Removing website in hosts"
-sed -e "s/$IP $site www.$site//g" $HOSTS_FILE > $TEMPORARY_FILE_HOSTS
+sed -e "s/$IP $site www.$site//g;/^$/d" $HOSTS_FILE > $TEMPORARY_FILE_HOSTS
 echo "=== Website in hosts successfully removed"
 
 echo "=== Copying new virtual host file"
