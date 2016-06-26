@@ -19,10 +19,10 @@ $ cp config-sample.conf config.conf
 
 Create an alias to make life easier, add at the end of file the following command.
 ```sh
-$ echo alias addsite=\"sudo path/to/starter-project-wordpress/addsite.sh \$1 \$2\" >> ~/.bashrc
+$ echo alias addsite=\"sudo path/to/Starting-New-Projects-WordPress/addsite.sh \$1 \$2\" >> ~/.bashrc
 ```
 ```sh
-$ echo alias delsite=\"sudo path/to/starter-project-wordpress/delsite.sh \$1 \$2\" >> ~/.bashrc
+$ echo alias delsite=\"sudo path/to/Starting-New-Projects-WordPress/delsite.sh \$1 \$2\" >> ~/.bashrc
 ```
 ```sh
 $ source ~/.bashrc
