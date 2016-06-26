@@ -5,7 +5,7 @@ Automation for creating new projects in WordPress to localhost with apache and v
   > Very useful for developers, facility for creating new projects.
   
 ### Version
-1.0.0
+1.1.0
 
 ### Installation
  Go to the project directory
