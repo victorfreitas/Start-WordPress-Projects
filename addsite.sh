@@ -17,6 +17,9 @@ set_defaults_variables $1 $2
 # Verifying necessary params
 verifying_params $site $db_name
 
+## Verifying vhost file exists ##
+check_vhosts_exits $VHOSTS_FILE
+
 # Directory exists exit
 dir_exists $root "$MSG_ROOT_EXISTS"
 

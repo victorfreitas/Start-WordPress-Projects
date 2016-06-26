@@ -119,3 +119,13 @@ function restart_server()
 	echo "=== Restarting server"
 	service "$SERVER" restart
 }
+
+# ======================================
+#         Aborted proccess
+# ======================================
+function aborted_process()
+{
+	if [ $1 != 'y' ]; then
+		exit_proccess "Aborted"
+	fi
+}

@@ -74,3 +74,28 @@ function download_latest_wordpress()
 		rm -rf "$dir_name/$LATEST_FILE"
 	fi
 }
+
+# ======================================
+#     Check for Vhosts file exists
+# ======================================
+function check_vhosts_exits()
+{
+	if [ ! -f $VHOSTS_FILE ]; then
+		echo -n "Vhosts file not exists, create new? [y/n]: "
+		read is_create_new_vhosts
+
+		create_new_vhosts_file $is_create_new_vhosts
+		aborted_process $is_create_new_vhosts
+	fi
+}
+
+# ======================================
+#        Create new Vhots files
+# ======================================
+function create_new_vhosts_file()
+{
+	if [ $1 = 'y' ]; then
+		echo "=== Creating new vhosts file"
+		echo "Listen 80" > $VHOSTS_FILE
+	fi
+}
