@@ -10,7 +10,7 @@ Automation for creating new projects in WordPress to localhost with apache and v
 ### Installation
  Go to the project directory
 ```sh
-$ cd path/to/Starting-New-Projects-WordPress/
+$ cd Starting-New-Projects-WordPress/
 ```
 Create in current directory, the config.conf file and alter variables of configuration. To be not overwritten in any updates.
 ```sh
