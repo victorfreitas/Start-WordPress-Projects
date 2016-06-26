@@ -71,7 +71,7 @@ if [ "$is_clone" != 'y' ]; then
 	read is_import_existing
 
 	if [ "$is_import_existing" = 'y' ]; then
-		echo -n "Enter an absolute directory. "
+		echo -n "Enter an absolute directory: "
 		read existing_project
 
 		# Import project existing

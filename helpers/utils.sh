@@ -104,6 +104,7 @@ function importing_existing_project()
 	if [ -d "$1" ]; then
 		create_directory $root
 
+		echo "=== Copying project"
 		cp -rf "$1/"* "$root/"
 		return
 	fi
