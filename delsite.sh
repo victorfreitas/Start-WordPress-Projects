@@ -1,4 +1,3 @@
-#!/bin/sh
 #!/bin/bash
 #!/bin/sed -f
 
