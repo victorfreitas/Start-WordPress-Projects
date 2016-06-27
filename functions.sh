@@ -96,7 +96,7 @@ function create_new_vhosts_file()
 {
 	if [ $1 = 'y' ]; then
 		echo "=== Creating new vhosts file"
-		echo "Listen 80" > $VHOSTS_FILE
+		sudo su -c "echo 'Listen 80' > $VHOSTS_FILE"
 		echo "[Done]"
 	fi
 }

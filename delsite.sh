@@ -39,19 +39,21 @@ touch $TEMPORARY_FILE_HOSTS
 echo "[Done]"
 
 echo "=== Removing virtual host"
-php -r "echo preg_replace( '/\n# BEGIN $site(\n.*)+# END $site/', '', file_get_contents( '$VHOSTS_FILE' ) );"\ > $TEMPORARY_FILE_VHOSTS
+sudo su -c\
+"php -r \"echo preg_replace( '/\n# BEGIN $site(\n.*)+# END $site/', '', file_get_contents( '$VHOSTS_FILE' ) );\"\ > $TEMPORARY_FILE_VHOSTS"
 echo "[Done]"
 
 echo "=== Removing website in hosts"
-sed -e "s/$IP $site www.$site//g;/^$/d" $HOSTS_FILE > $TEMPORARY_FILE_HOSTS
+sudo su -c\
+"sed -e \"s/$IP $site www.$site//g;/^$/d\" $HOSTS_FILE > $TEMPORARY_FILE_HOSTS"
 echo "[Done]"
 
 echo "=== Copying new virtual host file"
-cp -rf $TEMPORARY_FILE_VHOSTS $VHOSTS_FILE
+sudo cp -rf $TEMPORARY_FILE_VHOSTS $VHOSTS_FILE
 echo "[Done]"
 
 echo "=== Copying new hosts file"
-cp -rf $TEMPORARY_FILE_HOSTS $HOSTS_FILE
+sudo cp -rf $TEMPORARY_FILE_HOSTS $HOSTS_FILE
 echo "[Done]"
 
 echo "=== Removing temporary files vhosts and hosts"

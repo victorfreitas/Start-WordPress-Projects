@@ -51,15 +51,11 @@ echo -n "Clone project from git? [y/n]: "
 read is_clone
 
 if [ "$is_clone" = 'y' ]; then
-	notice_for_ssh_git
-fi
-
-if [ "$is_clone" = 'y' ]; then
 	echo -n "Inform your url from git: "
 	read git_url
 
 	echo "=== Clonning project"
-	git clone "$git_url" "$root"
+	git clone $git_url $root
 fi
 
 # Not success clone project exit
@@ -79,7 +75,8 @@ if [ "$is_clone" != 'y' ]; then
 fi
 
 echo "=== Writing in vhosts"
-cat << EOF >> "$VHOSTS_FILE"
+sudo su -c\
+"cat << EOF >> $VHOSTS_FILE
 # BEGIN $site
 <VirtualHost *:80>
     DocumentRoot $root
@@ -87,13 +84,14 @@ cat << EOF >> "$VHOSTS_FILE"
     ServerAlias www.$site
 </VirtualHost>
 # END $site
-EOF
+EOF"
 echo "[Done]"
 
 echo "=== Writing in hosts"
-cat << EOF >> /etc/hosts
+sudo su -c\
+"cat << EOF >> /etc/hosts
 $IP $site www.$site
-EOF
+EOF"
 echo "[Done]"
 
 if [ "$db_name" ]; then
@@ -148,9 +146,9 @@ echo "[Done]"
 
 echo "=== Setting permissions in the directory"
 # Set permissions
+sudo chown -R $perm $root
 find $root -type d -exec chmod 755 {} \;
 find $root -type f -exec chmod 644 {} \;
-chown -R $perm $root
 echo "[Done]"
 
 restart_server

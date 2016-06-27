@@ -32,19 +32,6 @@ function create_directory()
 }
 
 # ======================================
-#       Notice for SSH root user
-# ======================================
-function notice_for_ssh_git()
-{
-	echo -n "You created the ssh key in the root user to this git? [y/n]: "
-	read is_allowed
-
-	if [ $is_allowed != 'y' ]; then
-		exit_proccess "Aborted"
-	fi
-}
-
-# ======================================
 # 	    Checking params is empty
 # ======================================
 function check_params_is_empty()
@@ -148,7 +135,7 @@ function importing_existing_project()
 function restart_server()
 {
 	echo "=== Restarting server"
-	service "$SERVER" restart
+	sudo service "$SERVER" restart
 	echo "[Done]"
 }
 
