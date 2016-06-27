@@ -4,7 +4,6 @@
 
 dir_name=$(dirname $0)
 
-source "$dir_name/messages.conf"
 source "$dir_name/helpers/utils.sh"
 source "$dir_name/functions.sh"
 
@@ -21,7 +20,7 @@ verifying_params $site $db_name
 check_vhosts_exits $VHOSTS_FILE
 
 # Directory exists exit
-dir_exists $root "$MSG_ROOT_EXISTS"
+dir_exists "Could not create the project because it already exists."
 
 # Database exists exit
 database_exists $db_name
@@ -67,7 +66,7 @@ fi
 is_clonning_not_success $root $is_clone
 
 if [ "$is_clone" != 'y' ]; then
-	echo -n "Project import from an existing directory? [y/n]: "
+	echo -n "Import an existing project in directory? [y/n]: "
 	read is_import_existing
 
 	if [ "$is_import_existing" = 'y' ]; then
@@ -89,24 +88,22 @@ cat << EOF >> "$VHOSTS_FILE"
 </VirtualHost>
 # END $site
 EOF
-echo "=== Successfully created vhosts"
+echo "[Done]"
 
 echo "=== Writing in hosts"
 cat << EOF >> /etc/hosts
 $IP $site www.$site
 EOF
-echo "=== Successfully created hosts"
+echo "[Done]"
 
 if [ "$db_name" ]; then
 	echo "=== Creating database"
     echo "CREATE DATABASE IF NOT EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST"
-    echo "=== Successfully created database"
+    echo "[Done]"
 fi
 
 if [ "$is_import_db" = 'y' ]; then
-	echo "=== Importing database"
-	mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" "$db_name" < "$file_sql"
-	echo "=== Successfully importing database"
+	installing_database $file_sql
 
 	echo -n "Inform prefix your tables: "
 	read prefix_table
@@ -114,14 +111,14 @@ fi
 
 if [[ "$is_replace" = 'y' ]] && [[ "$is_import_db" = 'y' ]]; then
 	echo "=== Init replace database"
-	"$dir_name/srdb.cli.php" -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $url_search -r $site
-	echo "=== Replace database successful"
+	replace_url $url_search
+	echo "[Done]"
 fi
 
 if [ ! -d "$root" ]; then
 	echo "=== Creating directory root"
 	mkdir $root
-	echo "=== Successfully created directory root"
+	echo "[Done]"
 fi
 
 if [[ "$is_clone" != 'y' ]] && [[ "$is_import_existing" != 'y' ]]; then
@@ -131,26 +128,36 @@ fi
 
 if [ "$install_wp" = 'y' ]; then
 	download_latest_wordpress
+	setting_database
 
 	echo "=== Copying files WordPress"
 	# Copying WordPress files to root path
 	rsync -azv --progress --exclude-from="$dir_name/.rsyncignore" "$dir_name/wordpress/"* $root
-	echo "=== Copying files successfully"
+	echo "[Done]"
 fi
 
 echo "=== Creating wp-config.php"
 # Search and replace mysql settings in wp config
 sed -e "s/{TABLE_PREFIX}/$prefix_table/g;s/{DB_NAME}/$db_name/g;s/{DB_USER}/$DB_USER/g;s/{DB_PASS}/$DB_PASS/g;s/{SITE_URL}/$site/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
-echo "=== Successfully created wp-config.php"
+echo "[Done]"
 
 echo "=== Creating htaccess"
 # Copy htacess to root path
 cp "$dir_name/.htaccess" "$root/.htaccess"
-echo "=== Successfully created htaccess"
+echo "[Done]"
 
 echo "=== Setting permissions in the directory"
 # Set permissions
+find $root -type d -exec chmod 755 {} \;
+find $root -type f -exec chmod 644 {} \;
 chown -R $perm $root
-echo "=== Successfully in the permissions"
+echo "[Done]"
 
 restart_server
+
+if [[ "$install_wp" = 'y' ]] && [[ "$is_import_db" != 'y' ]]; then
+	echo "=== WordPress admin user: admin"
+	echo "=== WordPress admin password: admin"
+fi
+
+echo "=== Successfully create site: http://$site"

@@ -25,7 +25,7 @@ function set_defaults_variables()
 {
 	site="$1"
 	db_name="$2"
-	prefix_table="wp_"
+	prefix_table="nq4g6X_"
 	sr_url="n"
 	is_replace="n"
 	is_clone="n"
@@ -42,7 +42,7 @@ function set_defaults_variables()
 function verifying_params()
 {
 	if [ ! "$1" ]; then
-		echo -n "Enter your site, example mysite.com: "
+		echo -n "Enter your domain, [example.com]: "
 		read site
 	fi
 
@@ -97,5 +97,20 @@ function create_new_vhosts_file()
 	if [ $1 = 'y' ]; then
 		echo "=== Creating new vhosts file"
 		echo "Listen 80" > $VHOSTS_FILE
+		echo "[Done]"
+	fi
+}
+
+# ======================================
+#        Setting up database
+# ======================================
+function setting_database()
+{
+	if [ "$is_import_db" != 'y' ]; then
+		installing_database "$dir_name/wp_db.sql"
+
+		echo "=== Setting database"
+		replace_url "example.dev"
+		echo "[Done]"
 	fi
 }

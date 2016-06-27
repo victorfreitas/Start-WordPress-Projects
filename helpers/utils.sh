@@ -59,8 +59,18 @@ function check_params_is_empty()
 # ======================================
 function dir_exists()
 {
-	if [ -d "$1" ]; then
-		exit_proccess $2
+	if [ -d $root ]; then
+		exit_proccess "$1"
+	fi
+}
+
+# ======================================
+#    Checking diretory not exists
+# ======================================
+function dir_not_exists()
+{
+	if [ ! -d $root ]; then
+		exit_proccess "$1"
 	fi
 }
 
@@ -75,14 +85,34 @@ function file_not_exists()
 }
 
 # ======================================
+#     Show databases like DB Name
+# ======================================
+function set_db_output_variable()
+{
+	db_output=`echo "SHOW DATABASES;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" | grep $db_name`
+}
+
+# ======================================
 #   Checking database exists and die
 # ======================================
 function database_exists()
 {
-	DB_EXISTS=`echo "SHOW DATABASES LIKE '$1'" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" | sed -r "s/(^[a-zA-Z0-9]+)?[($1)]+//g"`
+	set_db_output_variable
 
-	if [ "$DB_EXISTS" ]; then
+	if [ $db_output ]; then
 	    exit_proccess "Database $1 exists, aborting process."
+	fi
+}
+
+# ======================================
+#  Checking database not exists and die
+# ======================================
+function database_not_exists()
+{
+	set_db_output_variable
+
+	if [ ! $db_output ]; then
+	    exit_proccess "Database $1 not exists, aborting process."
 	fi
 }
 
@@ -119,6 +149,7 @@ function restart_server()
 {
 	echo "=== Restarting server"
 	service "$SERVER" restart
+	echo "[Done]"
 }
 
 # ======================================
@@ -129,4 +160,22 @@ function aborted_process()
 	if [ $1 != 'y' ]; then
 		exit_proccess "Aborted"
 	fi
+}
+
+# ======================================
+#      Replace Urls from database
+# ======================================
+function replace_url()
+{
+	"$dir_name/srdb.cli.php" -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $1 -r $site
+}
+
+# ======================================
+#        Installing database
+# ======================================
+function installing_database()
+{
+	echo "=== Installing database"
+	mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" $db_name < $1
+	echo "[Done]"
 }
