@@ -34,6 +34,9 @@ function set_defaults_variables()
 	is_import_db="n"
 	file_sql=""
 	root="$HTTP_PATH/$site"
+	DB_TMP="db_tmp.sql"
+	usr_random="$(cat /dev/urandom | tr -dc 'a-z' | fold -w 8 | head -n 1)_usr"
+	WP_USER=$(id -un)
 }
 
 # ======================================
@@ -107,10 +110,25 @@ function create_new_vhosts_file()
 function setting_database()
 {
 	if [ "$is_import_db" != 'y' ]; then
-		installing_database "$dir_name/wp_db.sql"
+		create_file_tmp_db
+
+		installing_database "$dir_name/$DB_TMP"
+		rm -rf "$dir_name/$DB_TMP"
 
 		echo "=== Setting database"
 		replace_url "example.dev"
 		echo "[Done]"
 	fi
+}
+
+# ======================================
+#         Create temporary DB
+# ======================================
+function create_file_tmp_db()
+{
+	if [ $WP_USER = "root" ]; then
+		WP_USER=$usr_random
+	fi
+
+	sed -e "s/{{USER}}/$WP_USER/g;" "$dir_name/wp_db.sql" > "$dir_name/$DB_TMP"
 }

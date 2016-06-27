@@ -154,7 +154,7 @@ echo "[Done]"
 restart_server
 
 if [[ "$install_wp" = 'y' ]] && [[ "$is_import_db" != 'y' ]]; then
-	echo "=== WordPress admin user: admin"
+	echo "=== WordPress admin user: $WP_USER"
 	echo "=== WordPress admin password: admin"
 fi
 
