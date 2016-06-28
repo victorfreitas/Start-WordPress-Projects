@@ -23,7 +23,7 @@ $table_prefix  = '{TABLE_PREFIX}';
 // Debugging mode.
 const WP_DEBUG = true;
 const WP_DEBUG_LOG = true;
-const WP_DEBUG_DISPAY = false;
+const WP_DEBUG_DISPLAY = false;
 const SCRIPT_DEBUG = true;
 @ini_set( 'log_errors', 'On' );
 @ini_set( 'display_errors', 'Off' );
