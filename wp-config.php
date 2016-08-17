@@ -6,8 +6,11 @@ const DB_HOST     = 'localhost';
 const DB_CHARSET  = 'utf8';
 const DB_COLLATE  = '';
 
-//https://api.wordpress.org/secret-key/1.1/salt/
-
+/**
+ * Secret keys
+ *
+ * @link https://api.wordpress.org/secret-key/1.1/salt/
+ */
 define('AUTH_KEY',         '_@ZHWMh*(nn~Nf:9L1uSH~IfCW>4}F1,nw`0rkH/(lW*|w>Ie;^O;~|hN_!1!# >');
 define('SECURE_AUTH_KEY',  '2/PJXoOXa9(Q86;VpEGlT`*9(k$GeyUrf3VY$cSdEQF+ %Ig{nq4g6X/LMZjj&(b');
 define('LOGGED_IN_KEY',    'x[Ja@CjRSR7Q#^xhj=Q;BU.E;stYg8O&.Y0=s1A9$GKp&<ST:0C -Aorf)`~[;nW');
@@ -18,13 +21,19 @@ define('LOGGED_IN_SALT',   'BUZ&jx#|jOuH~}>X+J/F$Nd*r<3a~M6IY|OW7r^;/=-?{BF:Uab|
 define('NONCE_SALT',       'F[+HRDT=fcADq7q1eIvl+Yp^&brj.Hc- H)`8tFZZEap_![wJ:[*K-S$[*U=$d~V');
 
 // Table prefix.
-$table_prefix  = '{TABLE_PREFIX}';
+$table_prefix = '{TABLE_PREFIX}';
 
-// Debugging mode.
+/**
+ * Debugging mode
+ *
+ * @link https://codex.wordpress.org/Debugging_in_WordPress
+ */
 const WP_DEBUG = true;
 const WP_DEBUG_LOG = true;
 const WP_DEBUG_DISPLAY = false;
 const SCRIPT_DEBUG = true;
+const SAVEQUERIES = true;
+
 @ini_set( 'log_errors', 'On' );
 @ini_set( 'display_errors', 'Off' );
 
