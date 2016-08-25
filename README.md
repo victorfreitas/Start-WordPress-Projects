@@ -15,7 +15,7 @@ Automation for creating new projects in WordPress to localhost with apache and v
   * htaccess already set.
 
 ### Version
-1.3.0
+1.4.0
 
 ### Installation
  Go to the project directory
