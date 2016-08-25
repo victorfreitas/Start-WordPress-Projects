@@ -1,53 +1,53 @@
 <?php
-const DB_NAME     = '{DB_NAME}';
-const DB_USER     = '{DB_USER}';
-const DB_PASSWORD = '{DB_PASS}';
-const DB_HOST     = 'localhost';
-const DB_CHARSET  = 'utf8';
-const DB_COLLATE  = '';
+define( 'DB_NAME', '{DB_NAME}' );
+define( 'DB_USER', '{DB_USER}' );
+define( 'DB_PASSWORD', '{DB_PASS}' );
+define( 'DB_HOST', 'localhost' );
+define( 'DB_CHARSET', 'utf8' );
+define( 'DB_COLLATE', '' );
 
-//https://api.wordpress.org/secret-key/1.1/salt/
-
-define('AUTH_KEY',         '_@ZHWMh*(nn~Nf:9L1uSH~IfCW>4}F1,nw`0rkH/(lW*|w>Ie;^O;~|hN_!1!# >');
-define('SECURE_AUTH_KEY',  '2/PJXoOXa9(Q86;VpEGlT`*9(k$GeyUrf3VY$cSdEQF+ %Ig{nq4g6X/LMZjj&(b');
-define('LOGGED_IN_KEY',    'x[Ja@CjRSR7Q#^xhj=Q;BU.E;stYg8O&.Y0=s1A9$GKp&<ST:0C -Aorf)`~[;nW');
-define('NONCE_KEY',        '%zb$&J@L9,%k HmxQ||3xnH&g q r*44^OBi|rm/jMG5<9m)#,J|n<p3L756&{:{');
-define('AUTH_SALT',        '@p`Px5N=uSkl}tt~Ij;ZwB#wF#X.~Y=dvzh~tz=*-c.N(zgZ^|A!>U/|hj-^&89v');
-define('SECURE_AUTH_SALT', 'n>|JC,b7V<%661kx4*}`&<xy,X+ywh2bXjY-hM[;-R!%-Xq:?I^KVcXQ0~!`*i`H');
-define('LOGGED_IN_SALT',   'BUZ&jx#|jOuH~}>X+J/F$Nd*r<3a~M6IY|OW7r^;/=-?{BF:Uab|`_rbYsL{]&8C');
-define('NONCE_SALT',       'F[+HRDT=fcADq7q1eIvl+Yp^&brj.Hc- H)`8tFZZEap_![wJ:[*K-S$[*U=$d~V');
+// https://api.wordpress.org/secret-key/1.1/salt
+define('AUTH_KEY',         '.|+x]@|N.+ml2wvd2mJz(^A$@{d`|Ac|Z5(0<W6+|lD,-M)v2PTtJS)YP+Bwu/<y');
+define('SECURE_AUTH_KEY',  'yYNJ+R1+jhd?9t)OcKhJ)+888aWW9J*ou)mJNF)*_u&x`+ 7:0.?~SiuF1?u+Osk');
+define('LOGGED_IN_KEY',    'F>IhI/<F{|,t2[|4G`(AaowW+~:Ay(+ua~n:@J?b$CY{)#,|Vs-2u[:8e*>OT;R,');
+define('NONCE_KEY',        '54u0Kkiqw,cSSudxzSrhUHi#swU_WA|ox/V8~ATR(p4|4kW^UV6eLMOzzc8zjR6J');
+define('AUTH_SALT',        '|Q9[{b;:b!QoT`-9xdKF#dJ{&yp^r+%YJlE8|##b.4bYnJR60&1Nq6e{-&<E15pf');
+define('SECURE_AUTH_SALT', 'AA563rR|-<@(M3qk(&yQ5X?)}u[xx`Hjy2v:.1@Gy7g}rk*k-aW81Etz{lJ}V%@q');
+define('LOGGED_IN_SALT',   '5WMS&o*}]7Ua`{|h^LIsv)jixD7%nMt%b-nd:R){|>__@`H*-mxi-$,b6#.R]8l?');
+define('NONCE_SALT',       '(:D3w66)E-8F~`&}jl:|-~-PL]^e!,-5r[Yf}ROfaP]:yE<<S(J~=v5lbTVhX7EK');
 
 // Table prefix.
 $table_prefix  = '{TABLE_PREFIX}';
 
 // Debugging mode.
-const WP_DEBUG = true;
-const WP_DEBUG_LOG = true;
-const WP_DEBUG_DISPLAY = false;
-const SCRIPT_DEBUG = true;
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+define( 'SCRIPT_DEBUG', true );
+
 @ini_set( 'log_errors', 'On' );
 @ini_set( 'display_errors', 'Off' );
 
 // Compression
-const COMPRESS_CSS        = true;
-const COMPRESS_SCRIPTS    = true;
-const CONCATENATE_SCRIPTS = true;
-const ENFORCE_GZIP        = true;
+define( 'COMPRESS_CSS', true );
+define( 'COMPRESS_SCRIPTS', true );
+define( 'CONCATENATE_SCRIPTS', true );
+define( 'ENFORCE_GZIP', true );
 
 // Updates
-const WP_AUTO_UPDATE_CORE = false;
-const AUTOMATIC_UPDATER_DISABLED = true;
-const DISALLOW_FILE_EDIT  = true;
+define( 'WP_AUTO_UPDATE_CORE', false );
+define( 'AUTOMATIC_UPDATER_DISABLED', true );
+define( 'DISALLOW_FILE_EDIT', true );
 
 // Performance
-const WP_SITEURL = 'http://{SITE_URL}';
-const WP_HOME    = 'http://{SITE_URL}';
+define( 'WP_SITEURL', 'http://{SITE_URL}' );
+define( 'WP_HOME', 'http://{SITE_URL}' );
 
 // Post revision
-const WP_POST_REVISIONS = false;
+define( 'WP_POST_REVISIONS', false );
 
 //Memory limit
-const WP_MAX_MEMORY_LIMIT = '256M';
+define( 'WP_MAX_MEMORY_LIMIT', '256M' );
 
 // Absolute path to the WordPress directory.
 if ( ! defined( 'ABSPATH' ) )
