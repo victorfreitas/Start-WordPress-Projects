@@ -49,7 +49,3 @@ To remove a project just type the following command in the terminal.
 ```sh
 $ delsite your-project.dev database_name
 ```
-
-## Notice
-
-- To clone a git project you must add a root key in git
