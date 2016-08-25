@@ -1,4 +1,4 @@
-# Starting New Projects WordPress
+# Start WordPress Projects
 
 Automation for creating new projects in WordPress to localhost with apache and virtual hosts.
 
@@ -20,7 +20,7 @@ Automation for creating new projects in WordPress to localhost with apache and v
 ### Installation
  Go to the project directory
 ```sh
-$ cd Starting-New-Projects-WordPress/
+$ cd Start-WordPress-Projects/
 ```
 Create in current directory, the config.conf file and alter variables of configuration. To be not overwritten in any updates.
 ```sh
@@ -29,10 +29,10 @@ $ cp config-sample.conf config.conf
 
 Create an alias to make life easier, add at the end of file the following command.
 ```sh
-$ echo alias addsite=\"path/to/Starting-New-Projects-WordPress/addsite.sh \$1 \$2\" >> ~/.bashrc
+$ echo alias addsite=\"$(pwd)/addsite.sh \$1 \$2\" >> ~/.bashrc
 ```
 ```sh
-$ echo alias delsite=\"path/to/Starting-New-Projects-WordPress/delsite.sh \$1 \$2\" >> ~/.bashrc
+$ echo alias delsite=\"$(pwd)/delsite.sh \$1 \$2\" >> ~/.bashrc
 ```
 ```sh
 $ source ~/.bashrc
