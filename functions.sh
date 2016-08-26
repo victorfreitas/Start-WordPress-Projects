@@ -3,22 +3,6 @@
 #!/bin/sed -f
 
 # ======================================
-#  Importing variable of configurations.
-# ======================================
-function importing_variables()
-{
-	CONFIG_FILE="$1/config.conf"
-
-	if [ ! -f "$CONFIG_FILE" ]; then
-		source "$1/config-sample.conf"
-	fi
-
-	if [ -f "$CONFIG_FILE" ]; then
-		source $CONFIG_FILE
-	fi
-}
-
-# ======================================
 # 	    Setings default variables
 # ======================================
 function set_defaults_variables()
@@ -37,6 +21,21 @@ function set_defaults_variables()
 	DB_TMP="db_tmp.sql"
 	usr_random="$(cat /dev/urandom | tr -dc 'a-z' | fold -w 8 | head -n 1)_usr"
 	WP_USER=$(id -un)
+}
+
+# ======================================
+#  Importing variable of configurations.
+# ======================================
+function importing_variables()
+{
+	CONFIG_FILE="$1/config.conf"
+
+	if [ ! -f "$CONFIG_FILE" ]; then
+		CONFIG_FILE="$1/config-sample.conf"
+	fi
+
+	source $CONFIG_FILE
+	source "$dir_name/version.conf"
 }
 
 # ======================================
@@ -63,9 +62,9 @@ function verifying_params()
 # ======================================
 function download_latest_wordpress()
 {
-	if [[ "$WP_VERSION" != "$LATEST_WP_VERSION" ]] || [[ ! -d "$dir_name/wordpress" ]]; then
+	if [[ "$LATEST_WP_VERSION" != "$CURRENT_WP_VERSION" ]] || [[ ! -d "$dir_name/wordpress" ]]; then
 		# Remove old directory wordpress
-		rm -rf "$dir_name/wordpress"
+		sudo rm -rf "$dir_name/wordpress"
 
 		# Download latest version WordPress
 		wget -O "$dir_name/$LATEST_FILE" $WP_LATEST
@@ -75,6 +74,9 @@ function download_latest_wordpress()
 
 		# Remove file latest.zip
 		rm -rf "$dir_name/$LATEST_FILE"
+
+		# Set global Current WP Version
+		echo "CURRENT_WP_VERSION='$LATEST_WP_VERSION'" > "$dir_name/version.conf"
 	fi
 }
 
@@ -115,7 +117,7 @@ function setting_database()
 		installing_database "$dir_name/$DB_TMP"
 		rm -rf "$dir_name/$DB_TMP"
 
-		echo "=== Setting database"
+		echo "=== Replace url from database"
 		replace_url "example.dev"
 		echo "[Done]"
 	fi

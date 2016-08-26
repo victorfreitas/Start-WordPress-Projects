@@ -6,11 +6,11 @@ dir_name=$(dirname $0)
 source "$dir_name/helpers/utils.sh"
 source "$dir_name/functions.sh"
 
-# Importing variable of configurations.
-importing_variables $dir_name
-
 # Setings default variables
 set_defaults_variables $1 $2
+
+# Importing variable of configurations.
+importing_variables $dir_name
 
 # Verifying necessary params
 verifying_params $site $db_name
@@ -78,6 +78,13 @@ sudo su -c\
 "cat << EOF >> $VHOSTS_FILE
 # BEGIN $site
 <VirtualHost *:80>
+    # Set environment variables
+    SetEnv DB_NAME $DB_NAME
+    SetEnv DB_PASS $DB_PASS
+    SetEnv DB_USER $DB_USER
+    SetEnv DB_HOST $DB_HOST
+    SetEnv DB_CHARSET $DB_CHARSET
+
     DocumentRoot $root
     ServerName $site
     ServerAlias www.$site
@@ -107,7 +114,7 @@ if [ "$is_import_db" = 'y' ]; then
 fi
 
 if [[ "$is_replace" = 'y' ]] && [[ "$is_import_db" = 'y' ]]; then
-	echo "=== Init replace database"
+	echo "=== Init replace urls from database"
 	replace_url $url_search
 	echo "[Done]"
 fi
@@ -129,13 +136,13 @@ if [ "$install_wp" = 'y' ]; then
 
 	echo "=== Copying files WordPress"
 	# Copying WordPress files to root path
-	rsync -azv --progress --exclude-from="$dir_name/.rsyncignore" "$dir_name/wordpress/"* $root
+	rsync -az --exclude-from="$dir_name/.rsyncignore" "$dir_name/wordpress/"* $root
 	echo "[Done]"
 fi
 
 echo "=== Creating wp-config.php"
 # Search and replace mysql settings in wp config
-sed -e "s/{TABLE_PREFIX}/$prefix_table/g;s/{DB_NAME}/$db_name/g;s/{DB_USER}/$DB_USER/g;s/{DB_PASS}/$DB_PASS/g;s/{SITE_URL}/$site/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
+sed -e "s/{TABLE_PREFIX}/$prefix_table/g;s/{SITE_URL}/$site/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
 echo "[Done]"
 
 echo "=== Creating htaccess"

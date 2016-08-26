@@ -154,7 +154,7 @@ function aborted_process()
 # ======================================
 function replace_url()
 {
-	"$dir_name/srdb.cli.php" -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $1 -r $site
+	"$dir_name/srdb.cli.php" -v false -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $1 -r $site
 }
 
 # ======================================
