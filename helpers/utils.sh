@@ -86,7 +86,7 @@ function database_exists()
 {
 	set_db_output_variable
 
-	if [ $db_output ]; then
+	if [ ${#db_output} = ${#db_name} ]; then
 	    exit_proccess "Database $1 exists, aborting process."
 	fi
 }
@@ -98,7 +98,7 @@ function database_not_exists()
 {
 	set_db_output_variable
 
-	if [ ! $db_output ]; then
+	if [[ ! $db_output ]]; then
 	    exit_proccess "Database $1 not exists, aborting process."
 	fi
 }
