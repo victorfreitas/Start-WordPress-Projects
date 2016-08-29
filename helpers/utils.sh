@@ -76,7 +76,8 @@ function file_not_exists()
 # ======================================
 function set_db_output_variable()
 {
-	db_output=`echo "SHOW DATABASES;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" | grep $db_name`
+	query="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$db_name';"
+	db_output=`echo "$query" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" | grep $db_name`
 }
 
 # ======================================
@@ -86,7 +87,7 @@ function database_exists()
 {
 	set_db_output_variable
 
-	if [ ${#db_output} = ${#db_name} ]; then
+	if [ $db_output ]; then
 	    exit_proccess "Database $1 exists, aborting process."
 	fi
 }
