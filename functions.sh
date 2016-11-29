@@ -29,18 +29,18 @@ function set_defaults_variables()
 function importing_variables()
 {
 	CONFIG_FILE="$1/config.conf"
+	VERSION_FILE="$dir_name/version.conf"
 
 	if [ ! -f "$CONFIG_FILE" ]; then
 		CONFIG_FILE="$1/config-sample.conf"
 	fi
 
-	source $CONFIG_FILE
-
-	if [ ! -f "$dir_name/version.conf" ]; then
-		echo "CURRENT_WP_VERSION=$LATEST_WP_VERSION" > "$dir_name/version.conf"
+	if [ ! -f "$VERSION_FILE" ]; then
+		echo "CURRENT_WP_VERSION=$LATEST_WP_VERSION" > "$VERSION_FILE"
 	fi
 
-	source "$dir_name/version.conf"
+	source $CONFIG_FILE
+	source $VERSION_FILE
 }
 
 # ======================================
@@ -137,5 +137,9 @@ function create_file_tmp_db()
 		WP_USER=$usr_random
 	fi
 
-	sed -e "s/{{USER}}/$WP_USER/g;" "$dir_name/wp_db.sql" > "$dir_name/$DB_TMP"
+	if [ "$is_multisite" = 'y' ]; then
+		db_multisite='_multisite'
+	fi
+
+	sed -e "s/{{USER}}/$WP_USER/g;" "$dir_name/wp_db$db_multisite.sql" > "$dir_name/$DB_TMP"
 }

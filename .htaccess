@@ -15,8 +15,3 @@
 	RewriteRule ^wp-includes/theme-compat/ - [F,L]
 </IfModule>
 # END WordPress
-
-<Files debug.log>
-    Order allow,deny
-    Deny from all
-</Files>

@@ -25,7 +25,7 @@ dir_not_exists "Is directory this project not found."
 # Database not exists exit
 database_not_exists $db_name
 
-echo -n "Are you sure you want to remove the project? y/n: "
+echo -n "Are you sure you want to remove the project? [y/n]: "
 read is_remove_project
 
 if [ "$is_remove_project" != 'y' ]; then

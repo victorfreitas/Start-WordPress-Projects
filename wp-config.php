@@ -40,11 +40,13 @@ define( 'AUTOMATIC_UPDATER_DISABLED', true );
 define( 'DISALLOW_FILE_EDIT', true );
 
 // Performance
-define( 'WP_SITEURL', 'http://{SITE_URL}' );
-define( 'WP_HOME', 'http://{SITE_URL}' );
+define( '_CURRENT_SITE_DOMAIN', '{SITE_URL}' );
+define( 'WP_SITEURL', 'http://' . _CURRENT_SITE_DOMAIN );
+define( 'WP_HOME', 'http://' . _CURRENT_SITE_DOMAIN );
 
 // Post revision
 define( 'WP_POST_REVISIONS', false );
+//{MULTISITE}
 
 //Memory limit
 define( 'WP_MAX_MEMORY_LIMIT', '256M' );

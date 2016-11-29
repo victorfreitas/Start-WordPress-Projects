@@ -126,8 +126,16 @@ if [ ! -d "$root" ]; then
 fi
 
 if [[ "$is_clone" != 'y' ]] && [[ "$is_import_existing" != 'y' ]]; then
-	echo -n "Install WordPress? y/n: "
+	echo -n "Install WordPress? [y/n]: "
 	read install_wp
+fi
+
+echo -n "Instalation with multisite? [y/n]: "
+read is_multisite
+
+if [ "$is_multisite" = 'y' ]; then
+	echo -n "Is multisite subdomain? [y/n]: "
+	read is_subdomain
 fi
 
 if [ "$install_wp" = 'y' ]; then
@@ -140,16 +148,50 @@ if [ "$install_wp" = 'y' ]; then
 	echo "[Done]"
 fi
 
-echo "=== Creating wp-config.php"
-# Search and replace mysql settings in wp config
-sed -e "s/{TABLE_PREFIX}/$prefix_table/g;s/{SITE_URL}/$site/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
-echo "[Done]"
-
 echo "=== Creating htaccess"
 # Copy htacess to root path
-cp "$dir_name/.htaccess" "$root/.htaccess"
-echo "[Done]"
 
+if [ "$is_multisite" = 'y' ]; then
+	htaccess_file="$dir_name/multisitesf-htaccess"
+
+	if [ "$is_subdomain" = 'y' ]; then
+		htaccess_file="$dir_name/multisitesd-htaccess"
+	fi
+
+	cp $htaccess_file "$root/.htaccess"
+fi
+
+if [ "$is_multisite" != 'y' ]; then
+	cp "$dir_name/.htaccess" "$root/.htaccess"
+fi
+
+echo "[Done]"
+echo "=== Creating wp-config.php"
+
+MULTISITE_CONSTANTS=''
+
+if [ "$is_multisite" = 'y' ]; then
+	IS_SUBDOMAIN='false'
+
+	if [ "$is_subdomain" = 'y' ]; then
+		IS_SUBDOMAIN='true'
+	fi
+
+MULTISITE_CONSTANTS="\n\
+\/\/ Multisite\n\
+define( 'WP_ALLOW_MULTISITE', true );\n\
+define( 'MULTISITE', true );\n\
+define( 'SUBDOMAIN_INSTALL', $IS_SUBDOMAIN );\n\
+define( 'DOMAIN_CURRENT_SITE', _CURRENT_SITE_DOMAIN );\n\
+define( 'PATH_CURRENT_SITE', '\/' );\n\
+define( 'SITE_ID_CURRENT_SITE', 1 );\n\
+define( 'BLOG_ID_CURRENT_SITE', 1 );"
+fi
+
+# Search and replace mysql settings in wp config
+sed -e "s/{TABLE_PREFIX}/$prefix_table/g;s/{SITE_URL}/$site/g;s/\/\/{MULTISITE}/$MULTISITE_CONSTANTS/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
+
+echo "[Done]"
 echo "=== Setting permissions in the directory"
 # Set permissions
 sudo chown -R $perm $root
