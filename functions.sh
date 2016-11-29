@@ -35,6 +35,11 @@ function importing_variables()
 	fi
 
 	source $CONFIG_FILE
+
+	if [ ! -f "$dir_name/version.conf" ]; then
+		echo "CURRENT_WP_VERSION=$LATEST_WP_VERSION" > "$dir_name/version.conf"
+	fi
+
 	source "$dir_name/version.conf"
 }
 
