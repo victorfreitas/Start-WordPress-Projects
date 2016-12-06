@@ -11,6 +11,7 @@ Automation for creating new projects in WordPress to localhost with apache and v
   * Import an existing database.
   * Replace urls at the time of installation.
   * Create a clean install of WordPress, with only the necessary files.
+  * Multisite support.
   * WP Config already set.
   * htaccess already set.
 
