@@ -73,6 +73,17 @@ if [ "$is_clone" != 'y' ]; then
 	fi
 fi
 
+if [ ! -d "$root" ]; then
+	echo "=== Creating directory root"
+	mkdir "$root"
+
+	if [ ! -d "$root" ]; then
+		exit_proccess '=== Error while trying to create project directory.'
+	fi
+
+	echo "[Done]"
+fi
+
 echo "=== Writing in vhosts"
 sudo su -c\
 "cat << EOF >> $VHOSTS_FILE
@@ -116,12 +127,6 @@ fi
 if [[ "$is_replace" = 'y' ]] && [[ "$is_import_db" = 'y' ]]; then
 	echo "=== Init replace urls from database"
 	replace_url $url_search
-	echo "[Done]"
-fi
-
-if [ ! -d "$root" ]; then
-	echo "=== Creating directory root"
-	mkdir $root
 	echo "[Done]"
 fi
 

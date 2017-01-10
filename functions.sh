@@ -141,5 +141,5 @@ function create_file_tmp_db()
 		db_multisite='_multisite'
 	fi
 
-	sed -e "s/{{USER}}/$WP_USER/g;" "$dir_name/wp_db$db_multisite.sql" > "$dir_name/$DB_TMP"
+	sed -e "s/{{USER}}/$WP_USER/g;s/{{COUNT_STRING_USER}}/${#WP_USER}/g;" "$dir_name/wp_db$db_multisite.sql" > "$dir_name/$DB_TMP"
 }
