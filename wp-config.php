@@ -1,9 +1,9 @@
 <?php
-define( 'DB_NAME',     getenv( 'DB_NAME' ) );
-define( 'DB_USER',     getenv( 'DB_USER' ) );
-define( 'DB_PASSWORD', getenv( 'DB_PASS' ) );
-define( 'DB_HOST',     getenv( 'DB_HOST' ) );
-define( 'DB_CHARSET',  getenv( 'DB_CHARSET' ) );
+define( 'DB_NAME',     '{DB_NAME}' );
+define( 'DB_USER',     '{DB_USER}' );
+define( 'DB_PASSWORD', '{DB_PASS}' );
+define( 'DB_HOST',     '{DB_HOST}' );
+define( 'DB_CHARSET',  '{DB_CHARSET}' );
 define( 'DB_COLLATE',  '' );
 
 // https://api.wordpress.org/secret-key/1.1/salt

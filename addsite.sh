@@ -89,13 +89,6 @@ sudo su -c\
 "cat << EOF >> $VHOSTS_FILE
 # BEGIN $site
 <VirtualHost *:80>
-    # Set environment variables
-    SetEnv DB_NAME $DB_NAME
-    SetEnv DB_PASS $DB_PASS
-    SetEnv DB_USER $DB_USER
-    SetEnv DB_HOST $DB_HOST
-    SetEnv DB_CHARSET $DB_CHARSET
-
     DocumentRoot $root
     ServerName $site
     ServerAlias www.$site
@@ -194,7 +187,15 @@ define( 'BLOG_ID_CURRENT_SITE', 1 );"
 fi
 
 # Search and replace mysql settings in wp config
-sed -e "s/{TABLE_PREFIX}/$prefix_table/g;s/{SITE_URL}/$site/g;s/\/\/{MULTISITE}/$MULTISITE_CONSTANTS/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
+sed -e "
+s/{DB_NAME}/$DB_NAME/g;
+s/{DB_USER}/$DB_USER/g;
+s/{DB_PASS}/$DB_PASS/g;
+s/{DB_HOST}/$DB_HOST/g;
+s/{DB_CHARSET}/$DB_CHARSET/g;
+s/{TABLE_PREFIX}/$prefix_table/g;
+s/{SITE_URL}/$site/g;
+s/\/\/{MULTISITE}/$MULTISITE_CONSTANTS/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
 
 echo "[Done]"
 echo "=== Setting permissions in the directory"

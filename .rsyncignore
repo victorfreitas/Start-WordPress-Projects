@@ -5,4 +5,5 @@ wp-config-sample.php
 wp-admin/install.php
 wp-content/themes/twentyfifteen/
 wp-content/themes/twentyfourteen/
+wp-content/themes/twentysixteen/
 wp-content/plugins/hello.php

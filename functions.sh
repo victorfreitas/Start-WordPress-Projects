@@ -67,21 +67,25 @@ function verifying_params()
 # ======================================
 function download_latest_wordpress()
 {
-	if [[ "$LATEST_WP_VERSION" != "$CURRENT_WP_VERSION" ]] || [[ ! -d "$dir_name/wordpress" ]]; then
+	if [[ "$LATEST_WP_VERSION" > "$CURRENT_WP_VERSION" ]] || [[ ! -d "$dir_name/wordpress" ]]; then
 		# Remove old directory wordpress
 		sudo rm -rf "$dir_name/wordpress"
 
 		# Download latest version WordPress
-		wget -O "$dir_name/$LATEST_FILE" $WP_LATEST
+		echo "Download latest WordPress version..."
+		wget --no-verbose --output-document="$dir_name/$LATEST_FILE" $WP_LATEST
 
 		# Extract zip WordPress
-		unzip "$dir_name/$LATEST_FILE" -d $dir_name
+		echo "Extracting WordPress..."
+		unzip -qq "$dir_name/$LATEST_FILE" -d $dir_name
 
 		# Remove file latest.zip
+		echo "Removing zip file"
 		rm -rf "$dir_name/$LATEST_FILE"
 
 		# Set global Current WP Version
 		echo "CURRENT_WP_VERSION='$LATEST_WP_VERSION'" > "$dir_name/version.conf"
+		echo "[Done]"
 	fi
 }
 
