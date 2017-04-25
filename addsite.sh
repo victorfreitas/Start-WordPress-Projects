@@ -136,6 +136,13 @@ if [ "$is_multisite" = 'y' ]; then
 	read is_subdomain
 fi
 
+echo -n "Deseja criar as tabelas no banco de dados? [y/n]: "
+read is_db_install
+
+if [ "$is_db_install" = 'y' ]; then
+	setting_database
+fi
+
 if [ "$install_wp" = 'y' ]; then
 	download_latest_wordpress
 	setting_database
@@ -207,7 +214,7 @@ echo "[Done]"
 
 restart_server
 
-if [[ "$install_wp" = 'y' ]] && [[ "$is_import_db" != 'y' ]]; then
+if [ "$is_db_installed" = 'y' ]; then
 	echo "=== WordPress admin user: $WP_USER"
 	echo "=== WordPress admin password: admin"
 fi

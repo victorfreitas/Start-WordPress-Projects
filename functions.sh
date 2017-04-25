@@ -21,6 +21,7 @@ function set_defaults_variables()
 	DB_TMP="db_tmp.sql"
 	usr_random="$(cat /dev/urandom | tr -dc 'a-z' | fold -w 8 | head -n 1)_usr"
 	WP_USER=$(id -un)
+	is_db_installed="n"
 }
 
 # ======================================
@@ -129,6 +130,7 @@ function setting_database()
 		echo "=== Replace url from database"
 		replace_url "example.dev"
 		echo "[Done]"
+		is_db_installed="y"
 	fi
 }
 
