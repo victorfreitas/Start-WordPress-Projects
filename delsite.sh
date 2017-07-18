@@ -20,54 +20,56 @@ HOSTS_FILE="/etc/hosts"
 verifying_params $site $db_name
 
 # Check directory exists
-dir_not_exists "Is directory this project not found."
+dir_not_exists "${bold}Is directory this project not found."
 
 # Database not exists exit
 database_not_exists $db_name
 
-echo -n "Are you sure you want to remove the project? [y/n]: "
+echo -n "${bold}Are you sure you want to remove the project? [y/n]: "
 read is_remove_project
 
 if [ "$is_remove_project" != 'y' ]; then
-	exit_proccess "Aborted"
+	exit_proccess "${bold}Aborted"
 fi
 
-echo "=== Creating temporary files vhosts and hosts"
+echo "${bold}=== Creating temporary files vhosts and hosts"
 touch $TEMPORARY_FILE_VHOSTS
 touch $TEMPORARY_FILE_HOSTS
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Removing virtual host"
+echo "${bold}=== Removing virtual host"
 sudo su -c\
 "php -r \"echo preg_replace( '/\n# BEGIN $site(\n.*)+# END $site/', '', file_get_contents( '$VHOSTS_FILE' ) );\"\ > $TEMPORARY_FILE_VHOSTS"
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Removing website in hosts"
+echo "${bold}=== Removing website in hosts"
 sudo su -c\
 "sed -e \"s/$IP $site www.$site//g;/^$/d\" $HOSTS_FILE > $TEMPORARY_FILE_HOSTS"
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Copying new virtual host file"
+echo "${bold}=== Copying new virtual host file"
 sudo cp -rf $TEMPORARY_FILE_VHOSTS $VHOSTS_FILE
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Copying new hosts file"
+echo "${bold}=== Copying new hosts file"
 sudo cp -rf $TEMPORARY_FILE_HOSTS $HOSTS_FILE
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Removing temporary files vhosts and hosts"
+echo "${bold}=== Removing temporary files vhosts and hosts"
 rm $TEMPORARY_FILE_VHOSTS
 rm $TEMPORARY_FILE_HOSTS
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Removing directory $root"
+echo "${bold}=== Removing directory $root"
 rm -rf $root
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Deleting database $db_name"
+echo "${bold}=== Deleting database $db_name"
 echo "DROP DATABASE IF EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST"
-echo "[Done]"
+echo "${bold}[Done]"
 
 restart_server
 
-echo "=== Project successfully removed"
+add_separator
+
+echo "${bold}=== Project successfully removed"

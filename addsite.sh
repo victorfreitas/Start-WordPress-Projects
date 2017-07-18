@@ -19,41 +19,41 @@ verifying_params $site $db_name
 check_vhosts_exits $VHOSTS_FILE
 
 # Directory exists exit
-dir_exists "Could not create the project because it already exists."
+dir_exists "${bold}Could not create the project because it already exists."
 
 # Database exists exit
 database_exists $db_name
 
-echo -n "Import database? [y/n]: "
+echo -n "${bold}Import database? [y/n]: "
 read is_import_db
 
 if [ "$is_import_db" = 'y' ]; then
-	echo -n "Inform absolute path to file .sql: "
+	echo -n "${bold}Inform absolute path to file .sql: "
 	read file_sql
 
 	# File not exists exit
 	file_not_exists $file_sql
 
-	echo -n "Replace url WordPress DB? [y/n]: "
+	echo -n "${bold}Replace url WordPress DB? [y/n]: "
 	read is_replace
 fi
 
 if [ "$is_replace" = 'y' ]; then
-	echo -n "Inform url to search: "
+	echo -n "${bold}Inform url to search: "
 	read url_search
 
 	# Is empty url exit
-	is_empty $url_search "Url is empty, aborting process."
+	is_empty $url_search "${bold}Url is empty, aborting process."
 fi
 
-echo -n "Clone project from git? [y/n]: "
+echo -n "${bold}Clone project from git? [y/n]: "
 read is_clone
 
 if [ "$is_clone" = 'y' ]; then
-	echo -n "Inform your url from git: "
+	echo -n "${bold}Inform your url from git: "
 	read git_url
 
-	echo "=== Clonning project"
+	echo "${bold}=== Clonning project"
 	git clone $git_url $root
 fi
 
@@ -61,11 +61,11 @@ fi
 is_clonning_not_success $root $is_clone
 
 if [ "$is_clone" != 'y' ]; then
-	echo -n "Import an existing project in directory? [y/n]: "
+	echo -n "${bold}Import an existing project in directory? [y/n]: "
 	read is_import_existing
 
 	if [ "$is_import_existing" = 'y' ]; then
-		echo -n "Enter an absolute directory: "
+		echo -n "${bold}Enter an absolute directory: "
 		read existing_project
 
 		# Import project existing
@@ -74,17 +74,17 @@ if [ "$is_clone" != 'y' ]; then
 fi
 
 if [ ! -d "$root" ]; then
-	echo "=== Creating directory root"
+	echo "${bold}=== Creating directory root"
 	mkdir "$root"
 
 	if [ ! -d "$root" ]; then
-		exit_proccess '=== Error while trying to create project directory.'
+		exit_proccess '${bold}=== Error while trying to create project directory.'
 	fi
 
-	echo "[Done]"
+	echo "${bold}[Done]"
 fi
 
-echo "=== Writing in vhosts"
+echo "${bold}=== Writing in vhosts"
 sudo su -c\
 "cat << EOF >> $VHOSTS_FILE
 # BEGIN $site
@@ -95,48 +95,48 @@ sudo su -c\
 </VirtualHost>
 # END $site
 EOF"
-echo "[Done]"
+echo "${bold}[Done]"
 
-echo "=== Writing in hosts"
+echo "${bold}=== Writing in hosts"
 sudo su -c\
 "cat << EOF >> /etc/hosts
 $IP $site www.$site
 EOF"
-echo "[Done]"
+echo "${bold}[Done]"
 
 if [ "$db_name" ]; then
-	echo "=== Creating database"
+	echo "${bold}=== Creating database"
     echo "CREATE DATABASE IF NOT EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST"
-    echo "[Done]"
+    echo "${bold}[Done]"
 fi
 
 if [ "$is_import_db" = 'y' ]; then
 	installing_database $file_sql
 
-	echo -n "Inform prefix your tables: "
+	echo -n "${bold}Inform prefix your tables: "
 	read prefix_table
 fi
 
 if [[ "$is_replace" = 'y' ]] && [[ "$is_import_db" = 'y' ]]; then
-	echo "=== Init replace urls from database"
+	echo "${bold}=== Init replace urls from database"
 	replace_url $url_search
-	echo "[Done]"
+	echo "${bold}[Done]"
 fi
 
 if [[ "$is_clone" != 'y' ]] && [[ "$is_import_existing" != 'y' ]]; then
-	echo -n "Install WordPress? [y/n]: "
+	echo -n "${bold}Install WordPress? [y/n]: "
 	read install_wp
 fi
 
-echo -n "Instalation with multisite? [y/n]: "
+echo -n "${bold}Instalation with multisite? [y/n]: "
 read is_multisite
 
 if [ "$is_multisite" = 'y' ]; then
-	echo -n "Is multisite subdomain? [y/n]: "
+	echo -n "${bold}Is multisite subdomain? [y/n]: "
 	read is_subdomain
 fi
 
-echo -n "Deseja criar as tabelas no banco de dados? [y/n]: "
+echo -n "${bold}Do you want to create the tables in the database? [y/n]: "
 read is_db_install
 
 if [ "$is_db_install" = 'y' ]; then
@@ -147,13 +147,13 @@ if [ "$install_wp" = 'y' ]; then
 	download_latest_wordpress
 	setting_database
 
-	echo "=== Copying files WordPress"
+	echo "${bold}=== Copying files WordPress"
 	# Copying WordPress files to root path
 	rsync -az --exclude-from="$dir_name/.rsyncignore" "$dir_name/wordpress/"* $root
-	echo "[Done]"
+	echo "${bold}[Done]"
 fi
 
-echo "=== Creating htaccess"
+echo "${bold}=== Creating htaccess"
 # Copy htacess to root path
 
 if [ "$is_multisite" = 'y' ]; then
@@ -170,8 +170,8 @@ if [ "$is_multisite" != 'y' ]; then
 	cp "$dir_name/.htaccess" "$root/.htaccess"
 fi
 
-echo "[Done]"
-echo "=== Creating wp-config.php"
+echo "${bold}[Done]"
+echo "${bold}=== Creating wp-config.php"
 
 MULTISITE_CONSTANTS=''
 
@@ -204,19 +204,23 @@ s/{TABLE_PREFIX}/$prefix_table/g;
 s/{SITE_URL}/$site/g;
 s/\/\/{MULTISITE}/$MULTISITE_CONSTANTS/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
 
-echo "[Done]"
-echo "=== Setting permissions in the directory"
+echo "${bold}[Done]"
+echo "${bold}=== Setting permissions in the directory"
 # Set permissions
 sudo chown -R $perm $root
 find $root -type d -exec chmod 755 {} \;
 find $root -type f -exec chmod 644 {} \;
-echo "[Done]"
+echo "${bold}[Done]"
 
 restart_server
 
+add_separator
+
 if [ "$is_db_installed" = 'y' ]; then
-	echo "=== WordPress admin user: $WP_USER"
-	echo "=== WordPress admin password: admin"
+	echo "${bold}=== WordPress admin user: $WP_USER"
+	echo "${bold}=== WordPress admin password: admin"
 fi
 
-echo "=== Successfully create site: http://$site"
+add_separator
+
+echo "${bold}=== Successfully create site: http://$site"

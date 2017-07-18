@@ -22,6 +22,8 @@ function set_defaults_variables()
 	usr_random="$(cat /dev/urandom | tr -dc 'a-z' | fold -w 8 | head -n 1)_usr"
 	WP_USER=$(id -un)
 	is_db_installed="n"
+	bold=$(tput bold)
+	normal=$(tput sgr0)
 }
 
 # ======================================
@@ -50,12 +52,12 @@ function importing_variables()
 function verifying_params()
 {
 	if [ ! "$1" ]; then
-		echo -n "Enter your domain, [example.com]: "
+		echo -n "${bold}Enter your domain, [example.com]: "
 		read site
 	fi
 
 	if [ ! "$2" ]; then
-		echo -n "Enter your database name: "
+		echo -n "${bold}Enter your database name: "
 		read db_name
 	fi
 
@@ -73,20 +75,20 @@ function download_latest_wordpress()
 		sudo rm -rf "$dir_name/wordpress"
 
 		# Download latest version WordPress
-		echo "Download latest WordPress version..."
+		echo "${bold}Download latest WordPress version..."
 		wget --no-verbose --output-document="$dir_name/$LATEST_FILE" $WP_LATEST
 
 		# Extract zip WordPress
-		echo "Extracting WordPress..."
+		echo "${bold}Extracting WordPress..."
 		unzip -qq "$dir_name/$LATEST_FILE" -d $dir_name
 
 		# Remove file latest.zip
-		echo "Removing zip file"
+		echo "${bold}Removing zip file"
 		rm -rf "$dir_name/$LATEST_FILE"
 
 		# Set global Current WP Version
 		echo "CURRENT_WP_VERSION='$LATEST_WP_VERSION'" > "$dir_name/version.conf"
-		echo "[Done]"
+		echo "${bold}[Done]"
 	fi
 }
 
@@ -96,7 +98,7 @@ function download_latest_wordpress()
 function check_vhosts_exits()
 {
 	if [ ! -f $VHOSTS_FILE ]; then
-		echo -n "Vhosts file not exists, create new? [y/n]: "
+		echo -n "${bold}Vhosts file not exists, create new? [y/n]: "
 		read is_create_new_vhosts
 
 		create_new_vhosts_file $is_create_new_vhosts
@@ -110,9 +112,9 @@ function check_vhosts_exits()
 function create_new_vhosts_file()
 {
 	if [ $1 = 'y' ]; then
-		echo "=== Creating new vhosts file"
+		echo "${bold}=== Creating new vhosts file"
 		sudo su -c "echo 'Listen 80' > $VHOSTS_FILE"
-		echo "[Done]"
+		echo "${bold}[Done]"
 	fi
 }
 
@@ -127,9 +129,9 @@ function setting_database()
 		installing_database "$dir_name/$DB_TMP"
 		rm -rf "$dir_name/$DB_TMP"
 
-		echo "=== Replace url from database"
+		echo "${bold}=== Replace url from database"
 		replace_url "example.dev"
-		echo "[Done]"
+		echo "${bold}[Done]"
 		is_db_installed="y"
 	fi
 }
@@ -148,4 +150,17 @@ function create_file_tmp_db()
 	fi
 
 	sed -e "s/{{USER}}/$WP_USER/g;s/{{COUNT_STRING_USER}}/${#WP_USER}/g;" "$dir_name/wp_db$db_multisite.sql" > "$dir_name/$DB_TMP"
+}
+
+function add_separator()
+{
+	cols=$(/usr/bin/tput cols)
+
+	declare line
+
+	for i in `seq 1 ${cols}`; do
+	    line="${line}-"
+	done
+
+	echo $line
 }
