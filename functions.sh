@@ -52,12 +52,12 @@ function importing_variables()
 function verifying_params()
 {
 	if [ ! "$1" ]; then
-		echo -n "${bold}Enter your domain, [example.com]: "
+		echo -n "Enter your domain, [example.com]: "
 		read site
 	fi
 
 	if [ ! "$2" ]; then
-		echo -n "${bold}Enter your database name: "
+		echo -n "Enter your database name: "
 		read db_name
 	fi
 
@@ -75,20 +75,21 @@ function download_latest_wordpress()
 		sudo rm -rf "$dir_name/wordpress"
 
 		# Download latest version WordPress
-		echo "${bold}Download latest WordPress version..."
+		echo "Download latest WordPress version..."
 		wget --no-verbose --output-document="$dir_name/$LATEST_FILE" $WP_LATEST
 
 		# Extract zip WordPress
-		echo "${bold}Extracting WordPress..."
+		echo "Extracting WordPress..."
 		unzip -qq "$dir_name/$LATEST_FILE" -d $dir_name
 
 		# Remove file latest.zip
-		echo "${bold}Removing zip file"
+		echo "Removing zip file"
 		rm -rf "$dir_name/$LATEST_FILE"
 
 		# Set global Current WP Version
 		echo "CURRENT_WP_VERSION='$LATEST_WP_VERSION'" > "$dir_name/version.conf"
-		echo "${bold}[Done]"
+		echo "[Done]"
+		add_separator
 	fi
 }
 
@@ -98,7 +99,7 @@ function download_latest_wordpress()
 function check_vhosts_exits()
 {
 	if [ ! -f $VHOSTS_FILE ]; then
-		echo -n "${bold}Vhosts file not exists, create new? [y/n]: "
+		echo -n "Vhosts file not exists, create new? [y/n]: "
 		read is_create_new_vhosts
 
 		create_new_vhosts_file $is_create_new_vhosts
@@ -112,9 +113,10 @@ function check_vhosts_exits()
 function create_new_vhosts_file()
 {
 	if [ $1 = 'y' ]; then
-		echo "${bold}=== Creating new vhosts file"
+		echo "=== Creating new vhosts file"
 		sudo su -c "echo 'Listen 80' > $VHOSTS_FILE"
-		echo "${bold}[Done]"
+		echo "[Done]"
+		add_separator
 	fi
 }
 
@@ -129,9 +131,11 @@ function setting_database()
 		installing_database "$dir_name/$DB_TMP"
 		rm -rf "$dir_name/$DB_TMP"
 
-		echo "${bold}=== Replace url from database"
+		echo "=== Replace url from database"
 		replace_url "example.dev"
-		echo "${bold}[Done]"
+		echo "[Done]"
+
+		add_separator
 		is_db_installed="y"
 	fi
 }

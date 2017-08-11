@@ -9,6 +9,8 @@ source "$dir_name/functions.sh"
 # Setings default variables
 set_defaults_variables $1 $2
 
+add_separator
+
 # Importing variable of configurations.
 importing_variables $dir_name
 
@@ -19,41 +21,43 @@ verifying_params $site $db_name
 check_vhosts_exits $VHOSTS_FILE
 
 # Directory exists exit
-dir_exists "${bold}Could not create the project because it already exists."
+dir_exists "Could not create the project because it already exists."
 
 # Database exists exit
 database_exists $db_name
 
-echo -n "${bold}Import database? [y/n]: "
+add_separator
+
+echo -n "Import database? [y/n]: "
 read is_import_db
 
 if [ "$is_import_db" = 'y' ]; then
-	echo -n "${bold}Inform absolute path to file .sql: "
+	echo -n "Inform absolute path to file .sql: "
 	read file_sql
 
 	# File not exists exit
 	file_not_exists $file_sql
 
-	echo -n "${bold}Replace url WordPress DB? [y/n]: "
+	echo -n "Replace url WordPress DB? [y/n]: "
 	read is_replace
 fi
 
 if [ "$is_replace" = 'y' ]; then
-	echo -n "${bold}Inform url to search: "
+	echo -n "Inform url to search: "
 	read url_search
 
 	# Is empty url exit
-	is_empty $url_search "${bold}Url is empty, aborting process."
+	is_empty $url_search "Url is empty, aborting process."
 fi
 
-echo -n "${bold}Clone project from git? [y/n]: "
+echo -n "Clone project from git? [y/n]: "
 read is_clone
 
 if [ "$is_clone" = 'y' ]; then
-	echo -n "${bold}Inform your url from git: "
+	echo -n "Inform your url from git: "
 	read git_url
 
-	echo "${bold}=== Clonning project"
+	echo "=== Clonning project"
 	git clone $git_url $root
 fi
 
@@ -61,11 +65,11 @@ fi
 is_clonning_not_success $root $is_clone
 
 if [ "$is_clone" != 'y' ]; then
-	echo -n "${bold}Import an existing project in directory? [y/n]: "
+	echo -n "Import an existing project in directory? [y/n]: "
 	read is_import_existing
 
 	if [ "$is_import_existing" = 'y' ]; then
-		echo -n "${bold}Enter an absolute directory: "
+		echo -n "Enter an absolute directory: "
 		read existing_project
 
 		# Import project existing
@@ -74,17 +78,18 @@ if [ "$is_clone" != 'y' ]; then
 fi
 
 if [ ! -d "$root" ]; then
-	echo "${bold}=== Creating directory root"
+	echo "=== Creating directory root"
 	mkdir "$root"
 
 	if [ ! -d "$root" ]; then
-		exit_proccess '${bold}=== Error while trying to create project directory.'
+		exit_proccess '=== Error while trying to create project directory.'
 	fi
 
-	echo "${bold}[Done]"
+	echo "[Done]"
+	add_separator
 fi
 
-echo "${bold}=== Writing in vhosts"
+echo "=== Writing in vhosts"
 sudo su -c\
 "cat << EOF >> $VHOSTS_FILE
 # BEGIN $site
@@ -95,48 +100,52 @@ sudo su -c\
 </VirtualHost>
 # END $site
 EOF"
-echo "${bold}[Done]"
+echo "[Done]"
+add_separator
 
-echo "${bold}=== Writing in hosts"
+echo "=== Writing in hosts"
 sudo su -c\
 "cat << EOF >> /etc/hosts
 $IP $site www.$site
 EOF"
-echo "${bold}[Done]"
+echo "[Done]"
+add_separator
 
 if [ "$db_name" ]; then
-	echo "${bold}=== Creating database"
+	echo "=== Creating database"
     echo "CREATE DATABASE IF NOT EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST"
-    echo "${bold}[Done]"
+    echo "[Done]"
+    add_separator
 fi
 
 if [ "$is_import_db" = 'y' ]; then
 	installing_database $file_sql
 
-	echo -n "${bold}Inform prefix your tables: "
+	echo -n "Inform prefix your tables: "
 	read prefix_table
 fi
 
 if [[ "$is_replace" = 'y' ]] && [[ "$is_import_db" = 'y' ]]; then
-	echo "${bold}=== Init replace urls from database"
+	echo "=== Init replace urls from database"
 	replace_url $url_search
-	echo "${bold}[Done]"
+	echo "[Done]"
+	add_separator
 fi
 
 if [[ "$is_clone" != 'y' ]] && [[ "$is_import_existing" != 'y' ]]; then
-	echo -n "${bold}Install WordPress? [y/n]: "
+	echo -n "Install WordPress? [y/n]: "
 	read install_wp
 fi
 
-echo -n "${bold}Instalation with multisite? [y/n]: "
+echo -n "Instalation with multisite? [y/n]: "
 read is_multisite
 
 if [ "$is_multisite" = 'y' ]; then
-	echo -n "${bold}Is multisite subdomain? [y/n]: "
+	echo -n "Is multisite subdomain? [y/n]: "
 	read is_subdomain
 fi
 
-echo -n "${bold}Do you want to create the tables in the database? [y/n]: "
+echo -n "Do you want to create the tables in the database? [y/n]: "
 read is_db_install
 
 if [ "$is_db_install" = 'y' ]; then
@@ -147,13 +156,14 @@ if [ "$install_wp" = 'y' ]; then
 	download_latest_wordpress
 	setting_database
 
-	echo "${bold}=== Copying files WordPress"
+	echo "=== Copying files WordPress"
 	# Copying WordPress files to root path
 	rsync -az --exclude-from="$dir_name/.rsyncignore" "$dir_name/wordpress/"* $root
-	echo "${bold}[Done]"
+	echo "[Done]"
+	add_separator
 fi
 
-echo "${bold}=== Creating htaccess"
+echo "=== Creating htaccess"
 # Copy htacess to root path
 
 if [ "$is_multisite" = 'y' ]; then
@@ -170,8 +180,9 @@ if [ "$is_multisite" != 'y' ]; then
 	cp "$dir_name/.htaccess" "$root/.htaccess"
 fi
 
-echo "${bold}[Done]"
-echo "${bold}=== Creating wp-config.php"
+echo "[Done]"
+add_separator
+echo "=== Creating wp-config.php"
 
 MULTISITE_CONSTANTS=''
 
@@ -204,23 +215,25 @@ s/{TABLE_PREFIX}/$prefix_table/g;
 s/{SITE_URL}/$site/g;
 s/\/\/{MULTISITE}/$MULTISITE_CONSTANTS/g" $dir_name/$WP_CONFIG_FILE > $root/$WP_CONFIG_FILE
 
-echo "${bold}[Done]"
-echo "${bold}=== Setting permissions in the directory"
+echo "[Done]"
+add_separator
+echo "=== Setting permissions in the directory"
+
 # Set permissions
 sudo chown -R $perm $root
 find $root -type d -exec chmod 755 {} \;
 find $root -type f -exec chmod 644 {} \;
-echo "${bold}[Done]"
 
-restart_server
-
+echo "[Done]"
 add_separator
 
+# restart_server
+
 if [ "$is_db_installed" = 'y' ]; then
-	echo "${bold}=== WordPress admin user: $WP_USER"
-	echo "${bold}=== WordPress admin password: admin"
+	echo "=== WordPress admin user: $WP_USER"
+	echo "=== WordPress admin password: admin"
 fi
 
 add_separator
 
-echo "${bold}=== Successfully create site: http://$site"
+echo "=== Successfully create site: http://$site"
