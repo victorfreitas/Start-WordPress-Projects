@@ -227,7 +227,7 @@ find $root -type f -exec chmod 644 {} \;
 echo "[Done]"
 add_separator
 
-# restart_server
+restart_server
 
 if [ "$is_db_installed" = 'y' ]; then
 	echo "=== WordPress admin user: $WP_USER"

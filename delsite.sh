@@ -86,6 +86,6 @@ echo "[Done]"
 
 add_separator
 
-#restart_server
+restart_server
 
 echo "=== Project successfully removed"
