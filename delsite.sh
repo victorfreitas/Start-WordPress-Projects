@@ -81,7 +81,7 @@ echo "[Done]"
 add_separator
 
 echo "=== Deleting database $db_name"
-echo "DROP DATABASE IF EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST"
+echo "DROP DATABASE IF EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" &>> /dev/null
 echo "[Done]"
 
 add_separator

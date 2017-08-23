@@ -85,7 +85,7 @@ function set_db_output_variable()
 # ======================================
 function database_exists()
 {
-	set_db_output_variable
+	set_db_output_variable &>> /dev/null
 
 	if [ $db_output ]; then
 	    exit_proccess "Database $1 exists, aborting process."
@@ -97,7 +97,7 @@ function database_exists()
 # ======================================
 function database_not_exists()
 {
-	set_db_output_variable
+	set_db_output_variable &>> /dev/null
 
 	if [[ ! $db_output ]]; then
 	    exit_proccess "Database $1 not exists, aborting process."
@@ -136,7 +136,7 @@ function importing_existing_project()
 function restart_server()
 {
 	echo "=== Restarting server"
-	sudo service "$SERVER" restart
+	sudo service "$SERVER" restart &>> /dev/null
 	echo "[Done]"
 
 	add_separator
@@ -157,7 +157,7 @@ function aborted_process()
 # ======================================
 function replace_url()
 {
-	"$dir_name/srdb.cli.php" -v false -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $1 -r $site
+	"$dir_name/srdb.cli.php" -v false -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $1 -r $site &>> /dev/null
 }
 
 # ======================================
@@ -165,8 +165,10 @@ function replace_url()
 # ======================================
 function installing_database()
 {
+	add_separator
+
 	echo "=== Installing database"
-	mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" $db_name < $1
+	mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" $db_name < $1 &>> /dev/null
 	echo "[Done]"
 
 	add_separator

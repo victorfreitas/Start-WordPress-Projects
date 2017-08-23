@@ -135,7 +135,6 @@ function setting_database()
 		replace_url "example.dev"
 		echo "[Done]"
 
-		add_separator
 		is_db_installed="y"
 	fi
 }

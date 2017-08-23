@@ -9,8 +9,6 @@ source "$dir_name/functions.sh"
 # Setings default variables
 set_defaults_variables $1 $2
 
-add_separator
-
 # Importing variable of configurations.
 importing_variables $dir_name
 
@@ -57,8 +55,12 @@ if [ "$is_clone" = 'y' ]; then
 	echo -n "Inform your url from git: "
 	read git_url
 
+	add_separator
+
 	echo "=== Clonning project"
-	git clone $git_url $root
+	git clone $git_url $root &>> /dev/null
+
+	echo "[Done]"
 fi
 
 # Not success clone project exit
@@ -78,6 +80,8 @@ if [ "$is_clone" != 'y' ]; then
 fi
 
 if [ ! -d "$root" ]; then
+	add_separator
+
 	echo "=== Creating directory root"
 	mkdir "$root"
 
@@ -86,8 +90,9 @@ if [ ! -d "$root" ]; then
 	fi
 
 	echo "[Done]"
-	add_separator
 fi
+
+add_separator
 
 echo "=== Writing in vhosts"
 sudo su -c\
@@ -113,7 +118,7 @@ add_separator
 
 if [ "$db_name" ]; then
 	echo "=== Creating database"
-    echo "CREATE DATABASE IF NOT EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST"
+    echo "CREATE DATABASE IF NOT EXISTS $db_name;" | mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" &>> /dev/null
     echo "[Done]"
     add_separator
 fi
