@@ -136,7 +136,8 @@ function importing_existing_project()
 function restart_server()
 {
 	echo "=== Restarting server"
-	sudo service "$SERVER" restart &>> /dev/null
+	sudo service "$SERVER" restart 2>/dev/null &
+	spinner $!
 	echo "[Done]"
 
 	add_separator
@@ -157,7 +158,8 @@ function aborted_process()
 # ======================================
 function replace_url()
 {
-	"$dir_name/srdb.cli.php" -v false -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $1 -r $site &>> /dev/null
+	"$dir_name/srdb.cli.php" -v false -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASS" -n"$db_name" -s $1 -r $site 2>/dev/null &
+	spinner $!
 }
 
 # ======================================
@@ -168,7 +170,8 @@ function installing_database()
 	add_separator
 
 	echo "=== Installing database"
-	mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" $db_name < $1 &>> /dev/null
+	mysql -u"$DB_USER" -p"$DB_PASS" -h"$DB_HOST" $db_name < $1 2>/dev/null &
+	spinner $!
 	echo "[Done]"
 
 	add_separator

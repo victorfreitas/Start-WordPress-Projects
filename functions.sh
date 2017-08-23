@@ -76,7 +76,8 @@ function download_latest_wordpress()
 
 		# Download latest version WordPress
 		echo "Download latest WordPress version..."
-		wget --no-verbose --output-document="$dir_name/$LATEST_FILE" $WP_LATEST
+		wget --no-verbose --output-document="$dir_name/$LATEST_FILE" $WP_LATEST 2>/dev/null &
+		spinner $!
 
 		# Extract zip WordPress
 		echo "Extracting WordPress..."
@@ -166,4 +167,17 @@ function add_separator()
 	done
 
 	echo $line
+}
+
+function spinner()
+{
+	PID=$1
+	i=0
+	spin="/-\|"
+
+	while [ -d /proc/$PID ]; do
+	  i=$(( (i+1) %4 ))
+	  printf "\r${spin:$i:1}"
+	  sleep .1
+	done
 }

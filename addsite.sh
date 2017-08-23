@@ -58,7 +58,9 @@ if [ "$is_clone" = 'y' ]; then
 	add_separator
 
 	echo "=== Clonning project"
-	git clone $git_url $root &>> /dev/null
+	git clone $git_url $root 2>/dev/null &
+
+	spinner $!
 
 	echo "[Done]"
 fi
